@@ -160,5 +160,8 @@ TODO
 
 Many thanks for valuable feedback and advice from:
 
+- chikamune
+- domenic
+- horo-t
 - xharaken
 - yoshisatoyanagisawa
