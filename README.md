@@ -9,6 +9,7 @@ feedback on the proposed solution. It has not been approved to ship in Chrome.
 
 ## Participate
 - https://github.com/explainers-by-googlers/service-worker-auto-preload/issues
+- Discussion Forum https://github.com/WICG/proposals/issues/155
 
 ## Table of Contents [if the explainer is longer than one printed page]
 
