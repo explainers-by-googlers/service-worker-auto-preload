@@ -1,15 +1,15 @@
 # Explainer for ServiceWorkerAutoPreload
 
-This proposal is an early design sketch by the Chrome core loading team to describe the problem below and solicit
+This proposal is an early design sketch by the Chrome loading team to describe the problem below and solicit
 feedback on the proposed solution. It has not been approved to ship in Chrome.
 
 ## Proponents
 
-- Chrome's core loading team
+- Chrome loading team
 
 ## Participate
 - https://github.com/explainers-by-googlers/service-worker-auto-preload/issues
-- Discussion forum: TODO
+- Discussion forum: https://github.com/WICG/proposals/issues/155
 
 ## Table of Contents [if the explainer is longer than one printed page]
 
