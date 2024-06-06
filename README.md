@@ -154,7 +154,7 @@ ServiceWorkerAutoPreload won’t be enabled if the site has already enabled Navi
 
 ## Stakeholder Feedback / Opposition
 
-TODO
+We heard from developers and partners that they often use ServiceWorker to improve the page loading speed, but sometimes the startup process taking too long time.
 
 ## References & acknowledgements
 
