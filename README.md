@@ -111,7 +111,14 @@ ServiceWorkerAutoPreload is specified as an optional optimization that the brows
 
 As an update to the [ServiceWorker spec](https://w3c.github.io/ServiceWorker), we propose adding the new step in [Handle Fetch](https://w3c.github.io/ServiceWorker/#handle-fetch), which creates a new [request](https://fetch.spec.whatwg.org/#concept-request) and [fetch](https://fetch.spec.whatwg.org/#concept-fetch), and puts the response to the map with the [request](https://fetch.spec.whatwg.org/#concept-request) as a key (this is similar to what the [Static Routing API](https://github.com/WICG/service-worker-static-routing-api) does with the [race response map](https://w3c.github.io/ServiceWorker/#serviceworkerglobalscope-race-response-map)).
 
-We (Google Chrome team) plan to enable this optimization automatically when sites meet an eligibility criteria. The eligibility criteria is that higher rates of fetch handler results are fallback. We may also consider including the pass-through case. The criteria may be revised in the future to behave more smartly. For the experiment purpose before full launch, we plan to launch this feature to all sites under the limited traffic.
+## Eligibility criteria
+
+We (Google Chrome team) plan to enable this optimization automatically when sites meet an eligibility criteria. The eligibility criteria checks below points:
+
+1. Higher rates of fetch handler results are fallback. The bootstrap time and fetch handler execution time are not necessary from the loading performance perspective. We may also consider including the pass-through case.
+1. ServiceWorker is not running. The browser needs to start the ServiceWorker when it's not ready at the time of navigation. This takes a long time, and ServiceWorkerAutoPreload can parallelize this and the network request.
+
+The criteria may be revised in the future to behave more smartly. For the experiment purpose before full launch, we plan to launch this feature to all sites under the limited traffic.
 
 ## Opt-out
 
