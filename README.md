@@ -23,6 +23,7 @@ feedback on the proposed solution. It has not been approved to ship in Chrome.
   - [Fetch handler fallback](#fetch-handler-fallback)
   - [Redirect](#redirect)
 - [Rollout plan](#rollout-plan)
+- [Eligibility criteria](#eligibility-criteria)
 - [Opt-out](#opt-out)
 - [Alternative considered](#alternative-considered)
   - [BestEffortServiceWorker](#besteffortserviceworker)
@@ -51,11 +52,11 @@ ServiceWorkerAutoPreload also uses its response when the browser issues a fallba
 
 Offset the ServiceWorker bootstrap latency and fetch handler costs on websites without any behavior changes.
 
-The only cost is the server side cost to respond to the network requests, which may not be used if the fetch handler returns a result from the disk cache. This cost can be mitigated by applying ServiceWorkerAutoPreload only for websites that meet the [eligibility criteria](#rollout-plan).
+The only cost is the server side cost to respond to the network requests, which may not be used if the fetch handler returns a result from the disk cache. This cost can be mitigated by applying ServiceWorkerAutoPreload only for websites that meet the [eligibility criteria](#eligibility-criteria).
 
 ## How it works
 
-ServiceWorkerAutoPreload issues the network request (we use the term “auto preload network request” in this explainer) and invokes the fetch handler which may involve the bootstrap process at the same time for GET main resource requests with [eligible service workers](#rollout-plan).
+ServiceWorkerAutoPreload issues the network request (we use the term “auto preload network request” in this explainer) and invokes the fetch handler which may involve the bootstrap process at the same time for GET main resource requests with [eligible service workers](#eligibility-criteria).
 
 The network request is consumed in the fetch handler when it has fetch(event.request). At that time, the fetch handler doesn’t issue a new network request. Instead, the request is resolved with the response of the auto preload network request, which ServiceWorkerAutoPreload already triggered. This means the network request is triggered outside of the fetch handler, but the result is consumed by the fetch handler. Even when ServiceWorkerAutoPreload is enabled, the browser always respects the result from the fetch handler. It doesn’t use the response from the auto preload network request as it is without fetch handler interceptions. So developers can assume the fetch handler is always invoked, and the result of the fetch handler won’t be changed. The response is consistent whether ServiceWorkerAutoPreload is enabled or not.
 
