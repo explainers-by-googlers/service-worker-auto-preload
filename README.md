@@ -23,6 +23,7 @@ feedback on the proposed solution. It has not been approved to ship in Chrome.
   - [Fetch handler fallback](#fetch-handler-fallback)
   - [Redirect](#redirect)
 - [Rollout plan](#rollout-plan)
+- [Eligibility criteria](#eligibility-criteria)
 - [Opt-out](#opt-out)
 - [Alternative considered](#alternative-considered)
   - [BestEffortServiceWorker](#besteffortserviceworker)
@@ -51,11 +52,11 @@ ServiceWorkerAutoPreload also uses its response when the browser issues a fallba
 
 Offset the ServiceWorker bootstrap latency and fetch handler costs on websites without any behavior changes.
 
-The only cost is the server side cost to respond to the network requests, which may not be used if the fetch handler returns a result from the disk cache. This cost can be mitigated by applying ServiceWorkerAutoPreload only for websites that meet the [eligibility criteria](#rollout-plan).
+The only cost is the server side cost to respond to the network requests, which may not be used if the fetch handler returns a result from the disk cache. This cost can be mitigated by applying ServiceWorkerAutoPreload only for websites that meet the [eligibility criteria](#eligibility-criteria).
 
 ## How it works
 
-ServiceWorkerAutoPreload issues the network request (we use the term “auto preload network request” in this explainer) and invokes the fetch handler which may involve the bootstrap process at the same time for GET main resource requests with [eligible service workers](#rollout-plan).
+ServiceWorkerAutoPreload issues the network request (we use the term “auto preload network request” in this explainer) and invokes the fetch handler which may involve the bootstrap process at the same time for GET main resource requests with [eligible service workers](#eligibility-criteria).
 
 The network request is consumed in the fetch handler when it has fetch(event.request). At that time, the fetch handler doesn’t issue a new network request. Instead, the request is resolved with the response of the auto preload network request, which ServiceWorkerAutoPreload already triggered. This means the network request is triggered outside of the fetch handler, but the result is consumed by the fetch handler. Even when ServiceWorkerAutoPreload is enabled, the browser always respects the result from the fetch handler. It doesn’t use the response from the auto preload network request as it is without fetch handler interceptions. So developers can assume the fetch handler is always invoked, and the result of the fetch handler won’t be changed. The response is consistent whether ServiceWorkerAutoPreload is enabled or not.
 
@@ -111,7 +112,14 @@ ServiceWorkerAutoPreload is specified as an optional optimization that the brows
 
 As an update to the [ServiceWorker spec](https://w3c.github.io/ServiceWorker), we propose adding the new step in [Handle Fetch](https://w3c.github.io/ServiceWorker/#handle-fetch), which creates a new [request](https://fetch.spec.whatwg.org/#concept-request) and [fetch](https://fetch.spec.whatwg.org/#concept-fetch), and puts the response to the map with the [request](https://fetch.spec.whatwg.org/#concept-request) as a key (this is similar to what the [Static Routing API](https://github.com/WICG/service-worker-static-routing-api) does with the [race response map](https://w3c.github.io/ServiceWorker/#serviceworkerglobalscope-race-response-map)).
 
-We (Google Chrome team) plan to enable this optimization automatically when sites meet an eligibility criteria. The eligibility criteria is that higher rates of fetch handler results are fallback. We may also consider including the pass-through case. The criteria may be revised in the future to behave more smartly. For the experiment purpose before full launch, we plan to launch this feature to all sites under the limited traffic.
+## Eligibility criteria
+
+We (Google Chrome team) plan to enable this optimization automatically when sites meet an eligibility criteria. The eligibility criteria checks below points:
+
+1. Higher rates of fetch handler results are fallback. The bootstrap time and fetch handler execution time are not necessary from the loading performance perspective. We may also consider including the pass-through case.
+1. ServiceWorker is not running. The browser needs to start the ServiceWorker when it's not ready at the time of navigation. This takes a long time, and ServiceWorkerAutoPreload can parallelize this and the network request.
+
+The criteria may be revised in the future to behave more smartly. For the experiment purpose before full launch, we plan to launch this feature to all sites under the limited traffic.
 
 ## Opt-out
 
